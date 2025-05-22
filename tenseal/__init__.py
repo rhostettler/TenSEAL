@@ -7,7 +7,7 @@ except ImportError:
     import tenseal._tenseal_cpp as _ts_cpp
 from tenseal.tensors import CKKSTensor, CKKSVector, BFVVector, BFVTensor, PlainTensor
 
-from tenseal.enc_context import Context, SCHEME_TYPE, ENCRYPTION_TYPE
+from tenseal.enc_context import Context, SCHEME_TYPE, ENCRYPTION_TYPE, SEC_LEVEL_TYPE
 from tenseal.version import __version__
 
 

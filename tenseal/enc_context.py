@@ -6,6 +6,7 @@ from enum import Enum
 from typing import List, Union
 from abc import ABC
 import tenseal as ts
+import tenseal.sealapi as seal
 
 
 class ENCRYPTION_TYPE(Enum):
@@ -18,6 +19,9 @@ class SCHEME_TYPE(Enum):
     BFV = ts._ts_cpp.SCHEME_TYPE.BFV
     CKKS = ts._ts_cpp.SCHEME_TYPE.CKKS
 
+class SEC_LEVEL_TYPE(Enum):
+    NONE = seal.SEC_LEVEL_TYPE.NONE
+    TC128 = seal.SEC_LEVEL_TYPE.TC128
 
 SEAL_PRIMITIVE = Union[
     ts._ts_cpp.PublicKey,
@@ -94,6 +98,7 @@ class Context:
         plain_modulus: int = None,
         coeff_mod_bit_sizes: List[int] = [],
         encryption_type: ENCRYPTION_TYPE = ENCRYPTION_TYPE.ASYMMETRIC,
+        sec_level: SEC_LEVEL_TYPE = SEC_LEVEL_TYPE.TC128,
         n_threads: int = None,
         data: ts._ts_cpp.TenSEALContext = None,
     ):
@@ -141,6 +146,7 @@ class Context:
             plain_modulus,
             coeff_mod_bit_sizes,
             encryption_type.value,
+            sec_level.value,
             n_threads,
         )
 

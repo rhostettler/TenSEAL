@@ -12,9 +12,10 @@ using namespace std;
 
 TenSEALContext::TenSEALContext(EncryptionParameters parms,
                                encryption_type encryption_type,
+                               sec_level_type sec_level,
                                optional<size_t> n_threads) {
     this->dispatcher_setup(n_threads);
-    this->base_setup(parms);
+    this->base_setup(parms, sec_level);
     this->keys_setup(encryption_type);
 }
 
@@ -36,9 +37,9 @@ void TenSEALContext::dispatcher_setup(optional<size_t> n_threads) {
     this->_dispatcher = make_shared<sync::ThreadPool>(this->_threads);
 }
 
-void TenSEALContext::base_setup(EncryptionParameters parms) {
+void TenSEALContext::base_setup(EncryptionParameters parms, sec_level_type sec_level) {
     this->_parms = parms;
-    this->_context = make_shared<SEALContext>(this->_parms);
+    this->_context = make_shared<SEALContext>(this->_parms, true, sec_level);
 
     this->evaluator = make_shared<Evaluator>(*this->_context);
     this->encoder_factory = make_shared<TenSEALEncoder>(this->_context);
@@ -127,6 +128,7 @@ void TenSEALContext::keys_setup(encryption_type enc_type,
 shared_ptr<TenSEALContext> TenSEALContext::Create(
     scheme_type scheme, size_t poly_modulus_degree, uint64_t plain_modulus,
     vector<int> coeff_mod_bit_sizes, encryption_type encryption_type,
+    sec_level_type sec_level,
     optional<size_t> n_threads) {
     EncryptionParameters parms;
     switch (scheme) {
@@ -145,7 +147,7 @@ shared_ptr<TenSEALContext> TenSEALContext::Create(
     }
 
     return shared_ptr<TenSEALContext>(
-        new TenSEALContext(parms, encryption_type, n_threads));
+        new TenSEALContext(parms, encryption_type, sec_level, n_threads));
 }
 
 shared_ptr<TenSEALContext> TenSEALContext::Create(const std::string& input,

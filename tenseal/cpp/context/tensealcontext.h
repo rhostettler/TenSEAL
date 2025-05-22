@@ -44,6 +44,7 @@ class TenSEALContext {
      * @param[in] poly_modulus_degree: The polynomial modulus degree.
      * @param[in] plain_modulus: The plaintext modulus.
      * @param[in] coeff_mod_bit_sizes: The bit-lengths of the primes to be/
+     * @param[in] sec_level: Security level.
      * @param[in] n_threads: Optional parameter for the size of the threadpool
      *dispatcher. generated.
      * @returns shared_ptr to a new TenSEALContext object.
@@ -52,6 +53,7 @@ class TenSEALContext {
         scheme_type scheme, size_t poly_modulus_degree, uint64_t plain_modulus,
         vector<int> coeff_mod_bit_sizes,
         encryption_type enc_type = encryption_type::asymmetric,
+        sec_level_type sec_level = sec_level_type::tc128,
         optional<size_t> n_threads = {});
     /**
      * Create a context from an input stream.
@@ -290,13 +292,14 @@ class TenSEALContext {
         flag_auto_relin | flag_auto_rescale | flag_auto_mod_switch;
 
     TenSEALContext(EncryptionParameters parms, encryption_type,
+                   sec_level_type sec_level,
                    optional<size_t> n_threads);
     TenSEALContext(istream& stream, optional<size_t> n_threads);
     TenSEALContext(const std::string& stream, optional<size_t> n_threads);
     TenSEALContext(const TenSEALContextProto& proto,
                    optional<size_t> n_threads);
 
-    void base_setup(EncryptionParameters);
+    void base_setup(EncryptionParameters, sec_level_type sec_level = sec_level_type::tc128);
     void dispatcher_setup(optional<size_t> n_threads);
     void keys_setup(encryption_type enc_type,
                     optional<PublicKey> public_key = {},

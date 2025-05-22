@@ -41,7 +41,8 @@ EncryptionParameters create_ckks_parameters(size_t poly_modulus_degree,
     return parameters;
 }
 
-SEALContext create_context(EncryptionParameters parms) {
-    return SEALContext(parms);
+SEALContext create_context(EncryptionParameters parms,
+                           sec_level_type sec_level) {
+    return SEALContext(parms, true, sec_level);
 }
 }  // namespace tenseal

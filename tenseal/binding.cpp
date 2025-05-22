@@ -30,8 +30,9 @@ void bind_context(py::module &m) {
         "context", &create_context,
         R"(create a SEALContext object, checking the validity and properties of encryption_parameters.
     Args:
-        encryption_parameters : parameters to use to create the SEALContext.)",
-        py::arg("encryption_parameters"));
+        encryption_parameters : parameters to use to create the SEALContext.
+        sec_level : Security level.)",
+        py::arg("encryption_parameters"), py::arg("sec_level"));
 
     py::class_<TenSEALContext, std::shared_ptr<TenSEALContext>>(
         m, "TenSEALContext")
@@ -53,7 +54,7 @@ void bind_context(py::module &m) {
             py::overload_cast<bool>(&TenSEALContext::auto_mod_switch))
         .def("new",
              py::overload_cast<scheme_type, size_t, uint64_t, vector<int>,
-                               encryption_type, optional<size_t>>(
+                               encryption_type, sec_level_type, optional<size_t>>(
                  &TenSEALContext::Create),
              R"(Create a new TenSEALContext object to hold keys and parameters.
     Args:
@@ -63,6 +64,7 @@ void bind_context(py::module &m) {
         coeff_mod_bit_sizes : List of bit size for each coeffecient modulus.
             Can be an empty list for BFV, a default value will be given.
         encryption_type : switch between public key and symmetric encryption. Default set to public key encryption.
+        sec_level: Security level. Default set to TC128.
         n_threads : Optional: number of threads to use for multiplications.
         )")
         .def("seal_context", &TenSEALContext::seal_context)
